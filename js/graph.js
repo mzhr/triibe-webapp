@@ -1,4 +1,4 @@
-var d3 = require('d3');
+import * as d3 from "d3";
 
 var container = document.getElementById('vis-block');
 var style = window.getComputedStyle(container);
@@ -56,4 +56,5 @@ function URLTimeLine() {
 		.style('position', 'absolute')
 		.html("23:49pm");
 }
+
 

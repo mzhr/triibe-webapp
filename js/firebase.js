@@ -1,4 +1,4 @@
-var firebase = require("firebase/app");
+import firebase from "firebase/app";
 require("firebase/auth");
 require("firebase/database");
 require("firebase/storage");
@@ -6,13 +6,12 @@ require("firebase/storage");
 initFirebase();
 firebase.auth().onAuthStateChanged(function(user) {
 	if (user) {
-		var database = firebase.database();
-		// Load users and sessions
 		loadUsers(user);
 	} else {
 		authFirebase();
 	}
 });
+
 
 function loadUsers(user) {
 	var button = document.createElement("BUTTON");
@@ -23,11 +22,16 @@ function loadUsers(user) {
 }
 
 function loadSession(user) {
-	var currentDate = new Date().toJSON().slice(0,10);
-	var button = document.createElement("BUTTON");
-	button.setAttribute("class", "btn btn-primary")
-	button.innerHTML = currentDate;
-	document.getElementById("session-button-list").appendChild(button);
+	//var currentDate = new Date().toISOString().slice(0,10).split('-').reverse().join('-');
+	var newData = firebase.database().ref('data/Total Connections/' + user.uid + '/')
+	newData.on('value', function(snapshot) {
+		Object.keys(snapshot.val()).forEach(function(date) {
+			var button = document.createElement("BUTTON");
+			button.setAttribute("class", "btn btn-primary")
+			button.innerHTML = date;
+			document.getElementById("session-button-list").appendChild(button);
+		});
+	});
 }
 
 //setup firebase connection to fetch data

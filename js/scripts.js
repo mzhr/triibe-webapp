@@ -1,4 +1,4 @@
-require('jquery');
-require('bootstrap');
-require('./firebase.js');
-require('./graph.js');
+import 'jquery';
+import 'bootstrap';
+import './firebase.js';
+import './graph.js';
