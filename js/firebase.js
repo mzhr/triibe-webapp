@@ -5,6 +5,8 @@ import 'firebase/storage';
 
 var exports = module.exports = {};
 
+exports.IPData = [];
+
 exports.initFirebase = function () {
 	// Initialize, auto authenticate, and return data when called.
 	initFirebase();
@@ -19,34 +21,36 @@ exports.initFirebase = function () {
 	});
 }
 
-function getIPData(session) {
-
+exports.getIPData = function (session) {
 	// All data to be appended to dataSet and returned
 	var dataSet = [];
 
-	// Retrieve all the connection names of the session
-	var sessionData = firebase.database().ref('data/Total Connections/' + 
-			firebase.auth().currentUser.uid + '/' + session + '/');
+	if (firebase.auth().currentUser != null) {
+		// Retrieve all the connection names of the session
+		var sessionData = firebase.database().ref('data/Total Connections/' + 
+				firebase.auth().currentUser.uid + '/' + session + '/');
 
-	// Add all data into dataSet 
-	sessionData.on('value', function ipGetConnections(connections) {
-		Object.keys(connections.val()).forEach(function ipGetConnection(connectionName) {
+		// Add all data into dataSet 
+		sessionData.on('value', function ipGetConnections(connections) {
+			Object.keys(connections.val()).forEach(function ipGetConnection(connectionName) {
 
-			// Get the connection name to get its data values
-			var connectionData = firebase.database()
-				.ref('data/Total Connections/' + firebase.auth().currentUser.uid 
-						+ '/' + '25-09-2016' + '/' + connectionName  + '/');
-			
-			// Add a subarray of start time, end time, and url to the dataSet
-			connectionData.on('value', function ipConnectionGetTimeURL(connection) {
-				var connectionStart = connection.val()['Start Time'];
-				var connectionEnd = connection.val()['End Time'];
-				var connectionURL = connection.val()['IP Address URL'];
-				connectionTime = connectionTime.slice(11, 19);
-				dataSet.push([connectionStart, connectionEnd, connectionURL])
-			});              
+				// Get the connection name to get its data values
+				var connectionData = firebase.database()
+					.ref('data/Total Connections/' + firebase.auth().currentUser.uid 
+							+ '/' + '25-09-2016' + '/' + connectionName  + '/');
+				
+				// Add a subarray of start time, end time, and url to the dataSet
+				connectionData.on('value', function ipConnectionGetTimeURL(connection) {
+					var connectionStart = connection.val()['Start Time'];
+					var connectionEnd = connection.val()['End Time'];
+					var connectionURL = connection.val()['IP Address URL'];
+					connectionStart = connectionStart.slice(11, 19);
+					connectionEnd = connectionEnd.slice(11, 19);
+					dataSet.push([connectionStart, connectionEnd, connectionURL])
+				});              
+			});
 		});
-	});
+	}
 
 	return dataSet;
 }

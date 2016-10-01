@@ -4,7 +4,7 @@
   "description": "Webapp for visualising android analytics data",
   "main": "js/scripts.js",
   "scripts": {
-    "start": "webpack-dev-server ./js/scripts.js",
+    "start": "webpack-dev-server",
     "build": "webpack"
   },
   "author": "Mazhar Morshed",
