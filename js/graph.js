@@ -80,27 +80,44 @@ function drawTimeLine() {
 		if (ipData.length != 0) { 
 			clearInterval(dataInterval); 
 			clearInterval(cancleInterval);
+			console.log(ipData);
+			ipData.sort(function(a,b){
+				var stringA = a[0].split(':');
+				var timeA = parseInt(stringA[0], 10) + 
+					parseInt(stringA[1], 10)*0.01 + 
+					parseInt(stringA[2], 10)*0.0001;
+				var stringB = b[0].split(':');
+				var timeB = parseInt(stringB[0], 10) + 
+					parseInt(stringB[1], 10)*0.01 + 
+					parseInt(stringB[2], 10)*0.0001;
+				return timeA-timeB;
+			});
 			drawData(ipData);
 		}
 	}, 1000);
 }
 
-
 function drawData(dataSet) {
 	// Retrieve data from the firebase database and draw each point
+	var previousTime = 0.0;
 	dataSet.forEach(function addIPDataItem(value) {
-		console.log(value);
-		var time = value[0].split(':');
-		var hour = parseInt(time[0], 10);
-		var minute = parseInt(time[1], 10);
-		var second = parseInt(time[2], 10);
-		var pos = hour + minute*0.01 + second*0.0001;
-		timeLineBlock.append('div').attr('class', 'dataItem')
-			.style('background-color', 'blue')
-			.style('height', '0.5px')
-			.style('width', '40px')
-			.style('transform', 'translate(60px, -' + (graphScale(pos)) + 'px)')
-			.style('position', 'absolute');
+
+		var string = value[0].split(':');
+		var time = parseInt(string[0], 10) + 
+			parseInt(string[1], 10)*0.01 + 
+			parseInt(string[2], 10)*0.0001;
+		if (previousTime == time) {
+			return;
+		} else {
+			console.log(value);
+			timeLineBlock.append('div').attr('class', 'dataItem')
+				.style('background-color', 'blue')
+				.style('height', '0.5px')
+				.style('width', '40px')
+				.style('transform', 'translate(60px, -' + (graphScale(time)) + 'px)')
+				.style('position', 'absolute');
+			previousTime = time;
+		}
 	});
 }
 
