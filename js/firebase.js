@@ -12,8 +12,8 @@ exports.initFirebase = function () {
 	initFirebase();
 	firebase.auth().onAuthStateChanged(function initAuthFirebase(user) {
 		if (user) {
-			loadUsers(user);
-			exports.IPData = getIPData('25-09-2016');
+			loadUsers();
+			exports.IPData = getIPData(document.cookie);
 			console.log("Loading Graph");
 		} else {
 			authFirebase();
@@ -32,23 +32,31 @@ exports.getIPData = function (session) {
 
 		// Add all data into dataSet 
 		sessionData.on('value', function ipGetConnections(connections) {
-			Object.keys(connections.val()).forEach(function ipGetConnection(connectionName) {
+			try {
+				Object.keys(connections.val()).forEach(function ipGetConnection(connectionName) {
 
-				// Get the connection name to get its data values
-				var connectionData = firebase.database()
-					.ref('data/Total Connections/' + firebase.auth().currentUser.uid 
-							+ '/' + '25-09-2016' + '/' + connectionName  + '/');
-				
-				// Add a subarray of start time, end time, and url to the dataSet
-				connectionData.on('value', function ipConnectionGetTimeURL(connection) {
-					var connectionStart = connection.val()['Start Time'];
-					var connectionEnd = connection.val()['End Time'];
-					var connectionURL = connection.val()['IP Address URL'];
-					connectionStart = connectionStart.slice(11, 19);
-					connectionEnd = connectionEnd.slice(11, 19);
-					dataSet.push([connectionStart, connectionEnd, connectionURL])
-				});              
-			});
+					// Get the connection name to get its data values
+					var connectionData = firebase.database()
+						.ref('data/Total Connections/' + firebase.auth().currentUser.uid 
+								+ '/' + session + '/' + connectionName  + '/');
+
+					try { 
+						// Add a subarray of start time, end time, and url to the dataSet
+						connectionData.on('value', function ipConnectionGetTimeURL(connection) {
+							var connectionStart = connection.val()['Start Time'];
+							var connectionEnd = connection.val()['End Time'];
+							var connectionURL = connection.val()['IP Address URL'];
+							connectionStart = connectionStart.slice(11, 19);
+							connectionEnd = connectionEnd.slice(11, 19);
+							dataSet.push([connectionStart, connectionEnd, connectionURL])
+						});              
+					} catch(err) {
+						// do nothing
+					}
+				});
+			} catch(err) {
+				// do nothing
+			}
 		});
 	}
 
@@ -56,28 +64,21 @@ exports.getIPData = function (session) {
 }
 
 function loadUsers() {
-	var usersFirebaseData = firebase.database().ref('users/');
-
-	usersFirebaseData.on('value', function getUsersData(userFirebase) {
-		Object.keys(userFirebase.val()).forEach(function getUserNames(userData) {
-			console.log(userData);
-		}
-	});
 	// Retrieve name and display it as a button
-	//var button = document.createElement("BUTTON");
-	//button.setAttribute("class", "btn btn-primary")
-	//button.innerHTML = user.displayName;
-	//document.getElementById("user-button-list").appendChild(button);
+	var button = document.createElement("BUTTON");
+	button.setAttribute("class", "btn btn-primary")
+	button.innerHTML = firebase.auth().currentUser.displayName;
+	document.getElementById("user-button-list").appendChild(button);
 
 	// Load all sessions of the user
-	//loadSession(user);
+	loadSession();
 }
 
-function loadSession(user) {
+function loadSession() {
 	//var currentDate = new Date().toISOString().slice(0,10).split('-').reverse().join('-');
 
 	// Retrieve all days where data was collected by that user
-	var newData = firebase.database().ref('data/Total Connections/' + user.uid + '/')
+	var newData = firebase.database().ref('data/Total Connections/' + firebase.auth().currentUser.uid + '/')
 
 	// Show all the days as buttons
 	newData.on('value', function sessionGetData(dates) {
@@ -85,6 +86,10 @@ function loadSession(user) {
 			var button = document.createElement("BUTTON");
 			button.setAttribute("class", "btn btn-primary")
 			button.innerHTML = date;
+			button.onclick = function sessionButtonPress() {
+				document.cookie = date;
+				location.reload(true);
+			};
 			document.getElementById("session-button-list").appendChild(button);
 		});
 	});

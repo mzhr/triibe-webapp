@@ -21,6 +21,11 @@ graphBlock.append('div').attr('id', timeLineId)
 var timeLineBlock = d3.select('#time-line');
 var graphScale = d3.scaleLinear().domain([0, 24]).range([graphHeight, 0]);
 
+if (document.cookie == "") {
+	document.cookie = "1-1-2016";
+}
+
+
 // Initialise the firebase database, authenticate if needed
 fb.initFirebase();
 
@@ -74,7 +79,7 @@ function drawTimeLine() {
 
 	var ipData = [];
 	var dataInterval = setInterval(function getDataDelay() { 
-		ipData = fb.getIPData('25-09-2016');
+		ipData = fb.getIPData(document.cookie);
 	}, 1000);
 	var cancleInterval = setInterval(function cancleDataDelay() { 
 		if (ipData.length != 0) { 
