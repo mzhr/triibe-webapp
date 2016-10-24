@@ -25,13 +25,13 @@ module.exports = {
 
 	plugins: debug ? [
 		new webpack.ProvidePlugin({
-			$: 'jquery',
-			jQuery: 'jquery'
+			$: "jquery",
+			jQuery: "jquery"
 		})
 	] : [
 		new webpack.ProvidePlugin({
-			$: 'jquery',
-			jQuery: 'jquery'
+			$: "jquery",
+			jQuery: "jquery"
 		}),
 		new webpack.optimize.DedupePlugin(),
 		new webpack.optimize.OccurenceOrderPlugin(),

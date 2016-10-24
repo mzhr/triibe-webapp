@@ -55,15 +55,22 @@ exports.getIPData = function (session) {
 	return dataSet;
 }
 
-function loadUsers(user) {
+function loadUsers() {
+	var usersFirebaseData = firebase.database().ref('users/');
+
+	usersFirebaseData.on('value', function getUsersData(userFirebase) {
+		Object.keys(userFirebase.val()).forEach(function getUserNames(userData) {
+			console.log(userData);
+		}
+	});
 	// Retrieve name and display it as a button
-	var button = document.createElement("BUTTON");
-	button.setAttribute("class", "btn btn-primary")
-	button.innerHTML = user.displayName;
-	document.getElementById("user-button-list").appendChild(button);
+	//var button = document.createElement("BUTTON");
+	//button.setAttribute("class", "btn btn-primary")
+	//button.innerHTML = user.displayName;
+	//document.getElementById("user-button-list").appendChild(button);
 
 	// Load all sessions of the user
-	loadSession(user);
+	//loadSession(user);
 }
 
 function loadSession(user) {
@@ -108,20 +115,20 @@ function authFirebase() {
 	firebase.auth().getRedirectResult().then(function redirectAuth(result) {
 		if (result.credential) {
 			// This gives you a Google Access Token. You can use it to access the Google API.
-			var token = result.credential.accessToken;
+			// var token = result.credential.accessToken;
 			// ...
 		}
 		// The signed-in user info.
-		var user = result.user;
+		// var user = result.user;
 		console.log("Successfully Authenticated");
 	}).catch(function redirectAuthErr(error) {
 		// Handle Errors here.
-		var errorCode = error.code;
-		var errorMessage = error.message;
+		// var errorCode = error.code;
+		// var errorMessage = error.message;
 		// The email of the user's account used.
-		var email = error.email;
+		// var email = error.email;
 		// The firebase.auth.AuthCredential type that was used.
-		var credential = error.credential;
+		// var credential = error.credential;
 		console.log("Error in Authentication");
 	});
 }

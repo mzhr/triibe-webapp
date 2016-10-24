@@ -9,7 +9,7 @@ var grey = '#333';
 var container = document.getElementById('vis-block');
 var style = window.getComputedStyle(container);
 var width = parseInt(style.getPropertyValue('width'));
-var contentWidth = (width - 120) + 'px';
+// var contentWidth = (width - 120) + 'px';
 var graphHeight = 600;
 
 // Create a scale for visualising based on width of page.
@@ -46,16 +46,16 @@ function drawTimeLine() {
 	for (var i = 0; i < 25; i++) {
 		var htmlValue = '';
 		if (i < 10) {
-			htmlValue = '0' + i + ':00am';
+			htmlValue = '0' + i + 'am';
 		} else if (i < 12 && i > 9) {
-			htmlValue = i + ':00am';
+			htmlValue = i + 'am';
 		} else if (i == 24) {
-			htmlValue = '00:00am';
+			htmlValue = '00am';
 		} else {
-			htmlValue = i + ':00pm';
+			htmlValue = i + 'pm';
 		}
 		graphBlock.append('h6')
-			.style('transform', 'translate(-25px, -' + (graphScale(i)+50) + 'px) rotate(-20deg)')
+			.style('transform', 'translate(-5px, -' + (graphScale(i)+50) + 'px) rotate(-20deg)')
 			.style('position', 'absolute')
 			.html(htmlValue);
 	}
