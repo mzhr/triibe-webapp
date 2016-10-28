@@ -3,8 +3,21 @@ import 'firebase/auth';
 import 'firebase/database';
 import 'firebase/storage';
 
-var exports = module.exports = {};
 
+// REPLACE WITH OWN FIREBASE KEY
+function initFirebase() {
+	// Initialize firebase connection config and start
+	var config = {
+		apiKey: "AIzaSyCGtNp8KH9l9ZAQvYOJ8lNG1sbbzXbfJuk",
+		authDomain: "triibe-user-app.firebaseapp.com",
+		databaseURL: "https://triibe-user-app.firebaseio.com",
+		storageBucket: "triibe-user-app.appspot.com",
+		messagingSenderId: "139425671337"
+	};
+	firebase.initializeApp(config);
+}
+
+var exports = module.exports = {};
 exports.IPData = [];
 
 exports.initFirebase = function () {
@@ -96,17 +109,6 @@ function loadSession() {
 }
 
 
-function initFirebase() {
-	// Initialize firebase connection config and start
-	var config = {
-		apiKey: "AIzaSyCGtNp8KH9l9ZAQvYOJ8lNG1sbbzXbfJuk",
-		authDomain: "triibe-user-app.firebaseapp.com",
-		databaseURL: "https://triibe-user-app.firebaseio.com",
-		storageBucket: "triibe-user-app.appspot.com",
-		messagingSenderId: "139425671337"
-	};
-	firebase.initializeApp(config);
-}
 
 
 function authFirebase() {

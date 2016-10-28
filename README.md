@@ -8,6 +8,11 @@ Project for CSIT Students at RMIT, done during Semester 2, 2016.
 This is used with the TRIIBE Android App, and when hosted, the app
 should link to the website for visusalisation of that user.
 
+It will authenticate the user by sending the user to a google
+login page which will then attempt to get permission. List
+of collected data from different dates will be shown and will
+be selectable which will then visusalise frequency of IP usage.
+
 Building
 --------
 
@@ -29,10 +34,17 @@ Development
 -----------
 
 #### Building 
+
 Static files such as css and html files can be changed at any time.
 Anything in the js/ directory if changed must be rebuilt using
 
 	npm run webpack
+
+#### Changing firebase host
+
+If firebase server is going to be changed, in the top of js/firebase.js,
+there is a function that will need to be replace with the new firebase
+server key. Instructions can be found on the firebase API website.
 
 #### Architecture
 
